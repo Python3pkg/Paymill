@@ -3,8 +3,8 @@ Copyright (C) 2013 Client Side Web <rutherford@clientsideweb.net>
 minimal API client library for Paymill API v2
 """
 
-import urllib2
-import urllib
+import urllib.request, urllib.error, urllib.parse
+import urllib.request, urllib.parse, urllib.error
 import base64
 import logging
 import json
@@ -37,18 +37,18 @@ class Paymill(object):
         Returns a dictionary object populated with the json returned.
         """
         json_dict = {}
-        request = urllib2.Request(API_URL+cmd)
+        request = urllib.request.Request(API_URL+cmd)
         base64string = base64.standard_b64encode('%s:' % self.private_key)
         request.add_header('Authorization', 'Basic %s' % base64string)
         if header:
-            for k, val in header.iteritems():
+            for k, val in header.items():
                 request.add_header(k, val)
         request.get_method = lambda: req
-        params = urllib.urlencode(params) if params else {}        
+        params = urllib.parse.urlencode(params) if params else {}        
         try:
-            result = urllib2.urlopen(request, params)
+            result = urllib.request.urlopen(request, params)
             json_dict = json.load(result)
-        except urllib2.URLError, err:
+        except urllib.error.URLError as err:
             logging.error(err.reason)
         return json_dict
     
